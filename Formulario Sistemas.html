@@ -1,0 +1,212 @@
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mensajes Persistentes con Historial</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f9f9f9;
+    }
+
+
+    h2, h3 {
+      color: #333;
+    }
+
+
+    form {
+      margin-bottom: 20px;
+    }
+
+
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+
+    #mensajes, #borrados {
+      margin-top: 20px;
+    }
+
+
+    .mensaje, .mensaje-borrado {
+      padding: 10px;
+      background-color: #e6f2ff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+
+    .mensaje-borrado {
+      background-color: #ffe6e6;
+      border-color: #ff9999;
+    }
+
+
+    .mensaje button {
+      background-color: #dc3545;
+    }
+
+
+    .mensaje button:hover {
+      background-color: #a71d2a;
+    }
+
+
+    .mensaje-borrado button {
+      background-color: #dc3545;
+      margin-left: 10px;
+    }
+
+
+    .mensaje-borrado button:hover {
+      background-color: #a71d2a;
+    }
+
+
+    .seccion {
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+
+  <h2>Formulario de Mensajes</h2>
+
+
+  <form id="formulario">
+    <input type="text" id="entrada" placeholder="Escribe un mensaje..." required>
+    <button type="submit">Mostrar</button>
+  </form>
+
+
+  <div id="mensajes" class="seccion">
+    <h3>Mensajes Actuales</h3>
+    <!-- Mensajes aparecerán aquí -->
+  </div>
+
+
+  <div id="borrados" class="seccion">
+    <h3>Mensajes Borrados</h3>
+    <!-- Mensajes borrados aparecerán aquí -->
+  </div>
+
+
+  <script>
+    const formulario = document.getElementById('formulario');
+    const entrada = document.getElementById('entrada');
+    const contenedorMensajes = document.getElementById('mensajes');
+    const contenedorBorrados = document.getElementById('borrados');
+
+
+    let mensajesGuardados = JSON.parse(localStorage.getItem('mensajes')) || [];
+    let mensajesBorrados = JSON.parse(localStorage.getItem('borrados')) || [];
+
+
+    function actualizarLocalStorage() {
+      localStorage.setItem('mensajes', JSON.stringify(mensajesGuardados));
+      localStorage.setItem('borrados', JSON.stringify(mensajesBorrados));
+    }
+
+
+    function mostrarMensajes() {
+      contenedorMensajes.innerHTML = '<h3>Mensajes Actuales</h3>';
+      mensajesGuardados.forEach((mensaje, index) => {
+        const div = document.createElement('div');
+        div.className = 'mensaje';
+
+
+        const texto = document.createElement('span');
+        texto.textContent = mensaje;
+
+
+        const botonBorrar = document.createElement('button');
+        botonBorrar.textContent = 'Borrar';
+        botonBorrar.onclick = () => {
+          mensajesBorrados.unshift(mensajesGuardados[index]); // Mover a borrados
+          mensajesGuardados.splice(index, 1); // Eliminar de actuales
+          actualizarLocalStorage();
+          mostrarMensajes();
+          mostrarBorrados();
+        };
+
+
+        div.appendChild(texto);
+        div.appendChild(botonBorrar);
+        contenedorMensajes.appendChild(div);
+      });
+    }
+
+
+    function mostrarBorrados() {
+      contenedorBorrados.innerHTML = '<h3>Mensajes Borrados</h3>';
+      mensajesBorrados.forEach((mensaje, index) => {
+        const div = document.createElement('div');
+        div.className = 'mensaje-borrado';
+
+
+        const texto = document.createElement('span');
+        texto.textContent = mensaje;
+
+
+        const botonEliminar = document.createElement('button');
+        botonEliminar.textContent = 'Eliminar';
+        botonEliminar.onclick = () => {
+          mensajesBorrados.splice(index, 1);
+          actualizarLocalStorage();
+          mostrarBorrados();
+        };
+
+
+        div.appendChild(texto);
+        div.appendChild(botonEliminar);
+        contenedorBorrados.appendChild(div);
+      });
+    }
+
+
+    formulario.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const texto = entrada.value.trim();
+      if (texto !== '') {
+        mensajesGuardados.push(texto);
+        entrada.value = '';
+        actualizarLocalStorage();
+        mostrarMensajes();
+      }
+    });
+
+
+    // Mostrar al iniciar
+    mostrarMensajes();
+    mostrarBorrados();
+  </script>
+
+
+</body>
+</html>
