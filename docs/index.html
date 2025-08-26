@@ -108,13 +108,13 @@
 
   <div id="mensajes" class="seccion">
     <h3>Mensajes Actuales</h3>
-    <!-- Mensajes aparecerán aquí -->
+   
   </div>
 
 
   <div id="borrados" class="seccion">
     <h3>Mensajes Borrados</h3>
-    <!-- Mensajes borrados aparecerán aquí -->
+    
   </div>
 
 
@@ -149,8 +149,8 @@
         const botonBorrar = document.createElement('button');
         botonBorrar.textContent = 'Borrar';
         botonBorrar.onclick = () => {
-          mensajesBorrados.unshift(mensajesGuardados[index]); // Mover a borrados
-          mensajesGuardados.splice(index, 1); // Eliminar de actuales
+          mensajesBorrados.unshift(mensajesGuardados[index]); 
+          mensajesGuardados.splice(index, 1); 
           actualizarLocalStorage();
           mostrarMensajes();
           mostrarBorrados();
@@ -202,8 +202,6 @@
       }
     });
 
-
-    // Mostrar al iniciar
     mostrarMensajes();
     mostrarBorrados();
   </script>

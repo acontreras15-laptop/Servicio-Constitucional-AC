@@ -1,32 +1,37 @@
-const CACHE_NAME = 'mi-pwa-cache-v1';
-
+const CACHE_NAME = "mensajes-cache-v1";
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/script.js',
-  '/manifest.json',
-  '/images/icon-192x192.png',
-  '/images/icon-512x512.png'
+  "/",
+  "/index.html",
+  "/manifest.json",
+  "/sw.js"
 ];
 
-self.addEventListener('install', event => {
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Cacheando archivos para uso offline...');
-        return cache.addAll(urlsToCache);
-      })
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(urlsToCache);
+    })
   );
-}};
+});
 
-self.addEventListener('fetch', event => {
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
+});
+
+self.addEventListener("fetch", event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
   );
 });
