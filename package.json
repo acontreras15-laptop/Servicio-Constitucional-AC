@@ -1,0 +1,27 @@
+{
+  "name": "servicio-constitucional-ac",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acontreras15-laptop/Servicio-Constitucional-AC.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/acontreras15-laptop/Servicio-Constitucional-AC/issues"
+  },
+  "homepage": "https://github.com/acontreras15-laptop/Servicio-Constitucional-AC#readme",
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  }
+}
